@@ -1,1 +1,6 @@
 rootProject.name = 'search'
+include 'news-api'
+include 'external'
+include 'common'
+
+
