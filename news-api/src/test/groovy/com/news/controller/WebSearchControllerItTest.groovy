@@ -1,9 +1,9 @@
 package com.news.controller
 
-import com.news.controller.request.SearchRequest
-import com.news.controller.response.PageResult
-import com.news.controller.response.SearchResponse
-import com.news.service.WebQueryService
+import com.news.search.controller.request.SearchRequest
+import com.news.search.controller.response.PageResult
+import com.news.search.controller.response.SearchResponse
+import com.news.search.service.WebQueryService
 
 import org.spockframework.spring.SpringBean
 import org.springframework.beans.factory.annotation.Autowired

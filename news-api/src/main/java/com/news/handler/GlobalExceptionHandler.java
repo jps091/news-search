@@ -36,7 +36,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleBindException(BindException e) {
         log.error("Bind Exception occurred. message={}, className={}", e.getMessage(), e.getClass().getName());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body(new ErrorResponse(createMessage(e), ErrorType.INVALID_PARAMETER));
+                .body(new ErrorResponse(createMessage(e), ErrorType.INVALID_REQUEST));
     }
 
     private String createMessage(BindException e) {

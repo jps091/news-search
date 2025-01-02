@@ -1,19 +1,24 @@
 package com.news.controller
 
-import com.news.service.WebQueryService
+import com.news.search.controller.WebSearchController
+import com.news.search.service.WebApplicationService
+import com.news.search.service.WebQueryService
+import org.apache.catalina.startup.WebAnnotationSet
 import org.springframework.http.HttpStatus
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.setup.MockMvcBuilders
 import spock.lang.Specification
 
+import java.time.LocalDate
+
 class WebSearchControllerTest extends Specification {
-    WebQueryService webQueryService = Mock()
+    WebApplicationService webApplicationService = Mock(WebApplicationService)
     WebSearchController webController
     MockMvc mockMvc
 
     void setup(){
-        webController = new WebSearchController(webQueryService)
+        webController = new WebSearchController(webApplicationService)
         mockMvc = MockMvcBuilders.standaloneSetup(webController).build()
     }
 
@@ -33,11 +38,33 @@ class WebSearchControllerTest extends Specification {
         response.status == HttpStatus.OK.value()
 
         and:
-        1 * webQueryService.search(*_) >> {
+        1 * webApplicationService.search(*_) >> {
             String query, int page, int size ->
                 assert query == givenQuery
                 assert page == givenPage
                 assert size == givenSize
+        }
+    }
+
+    def "findStat"() {
+        given:
+        def givenQuery = "HTTP"
+        def givenDate = LocalDate.of(2024, 5, 1)
+
+        when:
+        def response = mockMvc.perform(
+                MockMvcRequestBuilders.get("/api/v1/webs/stats?query=${givenQuery}&date=${givenDate}"))
+                .andReturn()
+                .response
+
+        then:
+        response.status == HttpStatus.OK.value()
+
+        and:
+        1 * webApplicationService.findQueryCount(*_) >> {
+            String query, LocalDate date ->
+                assert query == givenQuery
+                assert date == givenDate
         }
     }
 }

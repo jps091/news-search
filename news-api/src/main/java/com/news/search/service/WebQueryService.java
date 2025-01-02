@@ -1,8 +1,8 @@
-package com.news.service;
+package com.news.search.service;
 
-import com.news.controller.response.PageResult;
-import com.news.controller.response.SearchResponse;
-import com.news.service.port.WebRepository;
+import com.news.search.controller.response.PageResult;
+import com.news.search.controller.response.SearchResponse;
+import com.news.search.service.port.WebRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

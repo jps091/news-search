@@ -1,4 +1,4 @@
-package com.news.controller.response;
+package com.news.search.controller.response;
 
 import java.util.List;
 

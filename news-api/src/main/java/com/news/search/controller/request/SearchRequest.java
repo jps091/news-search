@@ -1,4 +1,4 @@
-package com.news.controller.request;
+package com.news.search.controller.request;
 
 import jakarta.validation.constraints.*;
 import lombok.*;

@@ -1,8 +1,7 @@
 package com.news.controller.response
 
+import com.news.search.controller.response.SearchResponse
 import spock.lang.Specification
-
-import java.time.LocalDate
 
 class SearchResponseTest extends Specification {
     def "searchResponse 객체가 생성된다."(){
