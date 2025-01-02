@@ -3,7 +3,8 @@ package com.news.infrastructure
 import com.news.feign.NaverClient
 import com.news.model.Item
 import com.news.model.NaverWebResponse
-import com.news.service.port.WebRepository
+import com.news.search.infrastructure.WebRepositoryImpl
+import com.news.search.service.port.WebRepository
 import spock.lang.Specification
 
 class WebRepositoryImplTest extends Specification {
