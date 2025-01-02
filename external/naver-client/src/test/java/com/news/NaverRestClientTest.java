@@ -104,9 +104,9 @@
 //        });
 //    }
 //
-////    @Test
-////    void callNaver(){
-////        String result = client.search("무안", 1, 5);
-////        System.out.println("result = " + result);
-////    }
+//    @Test
+//    void callNaver(){
+//        String result = client.search("무안", 1, 5);
+//        System.out.println("result = " + result);
+//    }
 //}
