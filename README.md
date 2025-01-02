@@ -1,5 +1,5 @@
 # 프로젝트
-- News Search with Naver Open API
+- Web Search with Naver Open API
 
 # 기능 요구사항
 - 뉴스 검색 기능

@@ -1,8 +1,8 @@
 package com.news.feign
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.news.ApiException
-import com.news.ErrorType
+import com.news.exception.ApiException
+import com.news.exception.ErrorType
 import com.news.error.NaverErrorResponse
 import feign.Request
 import feign.Response

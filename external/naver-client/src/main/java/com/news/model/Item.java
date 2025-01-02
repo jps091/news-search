@@ -1,11 +1,12 @@
 package com.news.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+
 
 public record Item(
         String title,
-        @JsonProperty("originallink") String originalLink,
         String link,
-        String description,
-        String pubDate
+        String description
 ) {}

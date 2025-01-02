@@ -1,4 +1,4 @@
-package com.news;
+package com.news.exception;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
