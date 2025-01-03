@@ -1,10 +1,9 @@
 package com.news.search.infrastructure;
 
-import com.news.search.controller.response.PageResult;
-import com.news.search.controller.response.SearchResponse;
 import com.news.feign.NaverClient;
 import com.news.model.Item;
 import com.news.model.NaverWebResponse;
+import com.news.search.service.port.WebRepository;
 import com.news.search.service.response.PageQueryResult;
 import com.news.search.service.response.SearchQueryResponse;
 import lombok.RequiredArgsConstructor;
@@ -14,9 +13,10 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @Repository
-public class WebRepository {
+public class NaverWebRepositoryImpl implements WebRepository {
     private final NaverClient naverClient;
 
+    @Override
     public PageQueryResult<SearchQueryResponse> search(String query, int page, int size) {
         NaverWebResponse response = naverClient.search(query, page, size);
         List<SearchQueryResponse> responses = response.items().stream()

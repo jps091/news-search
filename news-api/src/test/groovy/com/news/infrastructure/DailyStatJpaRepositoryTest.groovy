@@ -111,13 +111,13 @@ class DailyStatJpaRepositoryTest extends Specification {
     def "가장 많이 검색된 쿼리 키워드를 개수와 함께 상위 3개반환한다."() {
         given:
         def now = LocalDateTime.now()
-        def stat1 = DailyStat.create('HTTP', now.plusMinutes(10))
-        def stat2 = DailyStat.create('HTTP', now.plusMinutes(10))
-        def stat3 = DailyStat.create('HTTP', now.plusMinutes(10))
-        def stat4 = DailyStat.create('JAVA', now.plusMinutes(10))
-        def stat5 = DailyStat.create('JAVA', now.plusMinutes(10))
-        def stat6 = DailyStat.create('JAVA', now.plusMinutes(10))
-        def stat7 = DailyStat.create('JAVA', now.plusMinutes(10))
+        def stat1 = DailyStat.create('HTML', now.plusMinutes(10))
+        def stat2 = DailyStat.create('HTML', now.plusMinutes(10))
+        def stat3 = DailyStat.create('HTML', now.plusMinutes(10))
+        def stat4 = DailyStat.create('SPOCK', now.plusMinutes(10))
+        def stat5 = DailyStat.create('SPOCK', now.plusMinutes(10))
+        def stat6 = DailyStat.create('SPOCK', now.plusMinutes(10))
+        def stat7 = DailyStat.create('SPOCK', now.plusMinutes(10))
         def stat8 = DailyStat.create('SPRING', now.plusMinutes(10))
         def stat9 = DailyStat.create('SPRING', now.plusMinutes(10))
         def stat10 = DailyStat.create('OS', now.plusMinutes(10))
@@ -130,9 +130,9 @@ class DailyStatJpaRepositoryTest extends Specification {
         then:
         verifyAll {
             response.size() == 3
-            response[0].query() == 'JAVA'
+            response[0].query() == 'SPOCK'
             response[0].count() == 4
-            response[1].query() == 'HTTP'
+            response[1].query() == 'HTML'
             response[1].count() == 3
             response[2].query() == 'SPRING'
             response[2].count() == 2

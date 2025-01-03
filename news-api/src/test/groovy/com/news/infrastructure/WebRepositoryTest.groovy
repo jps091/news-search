@@ -3,7 +3,8 @@ package com.news.infrastructure
 import com.news.feign.NaverClient
 import com.news.model.Item
 import com.news.model.NaverWebResponse
-import com.news.search.infrastructure.WebRepository
+import com.news.search.infrastructure.NaverWebRepositoryImpl
+import com.news.search.service.port.WebRepository
 import spock.lang.Specification
 
 class WebRepositoryTest extends Specification {
@@ -12,7 +13,7 @@ class WebRepositoryTest extends Specification {
     NaverClient naverClient = Mock()
 
     void setup(){
-        webRepository = new com.news.search.infrastructure.WebRepository(naverClient)
+        webRepository = new NaverWebRepositoryImpl(naverClient)
     }
 
     def "search 호출시 적절한 데이터 형식으로 변환한다."(){
