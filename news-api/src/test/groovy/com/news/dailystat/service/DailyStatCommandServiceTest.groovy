@@ -1,7 +1,8 @@
 package com.news.dailystat.service
 
+import com.news.dailystat.infrastructure.DailyStatJdbcRepository
+import com.news.dailystat.infrastructure.DailyStatJpaRepository
 import com.news.dailystat.model.DailyStat
-import com.news.dailystat.service.port.DailyStatRepository
 import spock.lang.Specification
 
 import java.time.LocalDateTime
@@ -10,10 +11,11 @@ class DailyStatCommandServiceTest extends Specification {
 
     DailyStatCommandService dailyStatCommandService
 
-    DailyStatRepository dailyStatRepository = Mock(DailyStatRepository)
+    DailyStatJdbcRepository dailyStatRepository = Mock(DailyStatJdbcRepository)
+    DailyStatJpaRepository dailyStatJpaRepository = Mock(DailyStatJpaRepository)
 
     void setup() {
-        dailyStatCommandService = new DailyStatCommandService(dailyStatRepository)
+        dailyStatCommandService = new DailyStatCommandService(dailyStatRepository, dailyStatJpaRepository)
     }
 
     def "저장시 넘어온 인자 그대로 호출된다."() {

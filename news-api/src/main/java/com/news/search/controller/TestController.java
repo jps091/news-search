@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
@@ -33,7 +34,6 @@ public class TestController {
     public StatResponse findQueryStats(@RequestParam(name = "query") String query,
                                        @RequestParam(name = "date", required = false)
                                        LocalDate date) {
-        log.info("[WebSearchController] find stats query={}, date={}", query, date);
         LocalDate localDate = (date != null) ? date : LocalDate.now();
         return webApplicationService.findQueryCount(query, localDate);
     }
@@ -42,7 +42,6 @@ public class TestController {
     public StatResponse findQueryStatsByJpa(@RequestParam(name = "query") String query,
                                        @RequestParam(name = "date", required = false)
                                        LocalDate date) {
-        log.info("[WebSearchController] find stats query={}, date={}", query, date);
         LocalDate localDate = (date != null) ? date : LocalDate.now();
         return webApplicationService.findQueryCountByJpa(query, localDate);
     }
@@ -55,5 +54,15 @@ public class TestController {
     @PostMapping("/jpa")
     public Long createByJpa(@RequestParam(name = "query") String query){
         return webApplicationService.createByJpa(query);
+    }
+
+    @GetMapping("/stats/ranking")
+    public List<StatResponse> findTop5Stats() {
+        return webApplicationService.findTop5Query();
+    }
+
+    @GetMapping("/jpa/stats/ranking")
+    public List<StatResponse> findTop5StatsByJpa() {
+        return webApplicationService.findTop5QueryByJpa();
     }
 }

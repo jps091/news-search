@@ -5,7 +5,8 @@ import com.news.search.controller.response.SearchResponse;
 import com.news.feign.NaverClient;
 import com.news.model.Item;
 import com.news.model.NaverWebResponse;
-import com.news.search.service.port.WebRepository;
+import com.news.search.service.response.PageQueryResult;
+import com.news.search.service.response.SearchQueryResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -13,20 +14,19 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @Repository
-public class WebRepositoryImpl implements WebRepository {
+public class WebRepository {
     private final NaverClient naverClient;
 
-    @Override
-    public PageResult<SearchResponse> search(String query, int page, int size) {
+    public PageQueryResult<SearchQueryResponse> search(String query, int page, int size) {
         NaverWebResponse response = naverClient.search(query, page, size);
-        List<SearchResponse> responses = response.items().stream()
+        List<SearchQueryResponse> responses = response.items().stream()
                 .map(this::convertToSearchResponse)
                 .toList();
-        return new PageResult<>(page, size, response.total(), responses);
+        return new PageQueryResult<>(page, size, response.total(), responses);
     }
 
-    private SearchResponse convertToSearchResponse(Item item){
-        return SearchResponse.builder()
+    private SearchQueryResponse convertToSearchResponse(Item item){
+        return SearchQueryResponse.builder()
                 .title(item.title())
                 .link(item.link())
                 .description(item.description())
