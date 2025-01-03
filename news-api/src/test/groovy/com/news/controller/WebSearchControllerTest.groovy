@@ -2,8 +2,6 @@ package com.news.controller
 
 import com.news.search.controller.WebSearchController
 import com.news.search.service.WebApplicationService
-import com.news.search.service.WebQueryService
-import org.apache.catalina.startup.WebAnnotationSet
 import org.springframework.http.HttpStatus
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
@@ -66,5 +64,20 @@ class WebSearchControllerTest extends Specification {
                 assert query == givenQuery
                 assert date == givenDate
         }
+    }
+
+
+    def "findStatRanking"() {
+        when:
+        def response = mockMvc.perform(
+                MockMvcRequestBuilders.get("/api/v1/webs/stats/ranking"))
+                .andReturn()
+                .response
+
+        then:
+        response.status == HttpStatus.OK.value()
+
+        and:
+        1 * webApplicationService.findTop5Query()
     }
 }

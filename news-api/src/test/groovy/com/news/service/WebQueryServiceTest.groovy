@@ -1,7 +1,7 @@
 package com.news.service
 
+import com.news.search.infrastructure.WebRepository
 import com.news.search.service.WebQueryService
-import com.news.search.service.port.WebRepository
 import spock.lang.Specification
 
 class WebQueryServiceTest extends Specification {

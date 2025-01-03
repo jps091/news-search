@@ -1,39 +1,54 @@
 package com.news.dailystat.service;
 
+import com.news.dailystat.infrastructure.DailyStatJdbcRepository;
 import com.news.dailystat.infrastructure.DailyStatJpaRepository;
+import com.news.dailystat.service.response.DailyStatQueryResponse;
 import com.news.search.controller.response.StatResponse;
-import com.news.dailystat.service.port.DailyStatRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 
 @RequiredArgsConstructor
 @Service
+@Transactional(readOnly = true)
 public class DailyStatQueryService {
 
-    private final DailyStatRepository dailyStatRepository;
+    private final DailyStatJdbcRepository dailyStatJdbcRepository;
     private final DailyStatJpaRepository dailyStatJpaRepository;
 
-    @Transactional(readOnly = true)
-    public StatResponse findQueryCount(String query, LocalDate localDate){
-        long count = dailyStatRepository.countByQueryAndMonthly(
+    private static final int PAGE = 0;
+    private static final int SIZE = 5;
+
+    public DailyStatQueryResponse findQueryCount(String query, LocalDate localDate){
+        long count = dailyStatJdbcRepository.countByQueryAndEventDateTimeBetween(
                 query,
                 localDate.withDayOfMonth(1).atStartOfDay(),
                 localDate.withDayOfMonth(localDate.lengthOfMonth()).atTime(LocalTime.MAX)
         );
-        return new StatResponse(query, count);
+        return new DailyStatQueryResponse(query, count);
     }
 
-    @Transactional(readOnly = true)
-    public StatResponse findQueryCountByJpa(String query, LocalDate localDate){
+    public DailyStatQueryResponse findQueryCountByJpa(String query, LocalDate localDate){
         long count = dailyStatJpaRepository.countByQueryAndEventDateTimeBetween(
                 query,
                 localDate.withDayOfMonth(1).atStartOfDay(),
                 localDate.withDayOfMonth(localDate.lengthOfMonth()).atTime(LocalTime.MAX)
         );
-        return new StatResponse(query, count);
+        return new DailyStatQueryResponse(query, count);
+    }
+
+    public List<DailyStatQueryResponse> findTop5Query() {
+        return dailyStatJdbcRepository.findTopQuery(SIZE);
+    }
+
+    public List<DailyStatQueryResponse> findTop5QueryByJpa() {
+        Pageable pageable = PageRequest.of(PAGE, SIZE);
+        return dailyStatJpaRepository.findTopQuery(pageable);
     }
 }

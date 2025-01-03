@@ -4,7 +4,8 @@ import com.news.search.controller.request.SearchRequest
 import com.news.search.controller.response.PageResult
 import com.news.search.controller.response.SearchResponse
 import com.news.search.service.WebQueryService
-
+import com.news.search.service.response.PageQueryResult
+import com.news.search.service.response.SearchQueryResponse
 import org.spockframework.spring.SpringBean
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
@@ -30,9 +31,13 @@ class WebSearchControllerItTest extends Specification {
     def "정상인자로 요청시 성공한다."() {
         given:
         def request = new SearchRequest(query: "HTTP", page: 1, size: 10)
+        def mockPageQueryResult = new PageQueryResult<>(
+                1, 10, 10,
+                [new SearchQueryResponse("title1", "link1", "description1")]
+        )
 
         and:
-        1 * webQueryService.search(*_) >> new PageResult<>(1, 10, 10, [GroovyMock(SearchResponse)])
+        1 * webQueryService.search(*_) >> mockPageQueryResult
 
         when:
         def result = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/webs")

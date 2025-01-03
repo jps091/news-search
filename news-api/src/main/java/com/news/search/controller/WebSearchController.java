@@ -5,17 +5,16 @@ import com.news.search.controller.response.PageResult;
 import com.news.search.controller.response.SearchResponse;
 import com.news.search.controller.response.StatResponse;
 import com.news.search.service.WebApplicationService;
-import com.news.search.service.WebQueryService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
@@ -36,5 +35,11 @@ public class WebSearchController {
         log.info("[WebSearchController] find stats query={}, date={}", query, date);
         LocalDate localDate = (date != null) ? date : LocalDate.now();
         return webApplicationService.findQueryCount(query, localDate);
+    }
+
+    @GetMapping("/stats/ranking")
+    public List<StatResponse> findTop5Stats() {
+        log.info("[WebSearchController] find top 5 stats");
+        return webApplicationService.findTop5Query();
     }
 }
