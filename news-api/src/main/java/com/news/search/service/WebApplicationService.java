@@ -31,6 +31,34 @@ public class WebApplicationService {
         return pageResponse;
     }
 
+    public StatResponse findQueryCount(String query, LocalDate date) {
+        DailyStatQueryResponse queryResponse = dailyStatQueryService.findQueryCount(query, date);
+        return new StatResponse(queryResponse.query(), queryResponse.count());
+    }
+
+    public List<StatResponse> findTop5Query() {
+        List<DailyStatQueryResponse> queryResponse = dailyStatQueryService.findTop5Query();
+        return queryResponse.stream()
+                .map(this::toStatResponse)
+                .toList();
+    }
+
+    private PageResult<SearchResponse> convertToPageResult(PageQueryResult<SearchQueryResponse> pageQueryResponse) {
+        List<SearchResponse> searchResponses = pageQueryResponse.contents().stream()
+                .map(this::toSearchResponse)
+                .toList();
+        return new PageResult<>(pageQueryResponse.page(), pageQueryResponse.size(), pageQueryResponse.totalElements(), searchResponses);
+    }
+
+    private SearchResponse toSearchResponse(SearchQueryResponse queryResponse){
+        return new SearchResponse(queryResponse.title(), queryResponse.link(), queryResponse.description());
+    }
+
+    private StatResponse toStatResponse(DailyStatQueryResponse queryResponse){
+        return new StatResponse(queryResponse.query(), queryResponse.count());
+    }
+
+    /**아래는 JPA 테스트용 메서드*/
     public PageResult<SearchResponse> searchByJpa(String query, int page, int size){
         PageQueryResult<SearchQueryResponse> pageQueryResponse = webQueryService.search(query, page, size);
         PageResult<SearchResponse> pageResponse = convertToPageResult(pageQueryResponse);
@@ -51,42 +79,17 @@ public class WebApplicationService {
         return dailyStat.getId();
     }
 
-    public StatResponse findQueryCount(String query, LocalDate date) {
-        DailyStatQueryResponse queryResponse = dailyStatQueryService.findQueryCount(query, date);
-        return new StatResponse(queryResponse.query(), queryResponse.count());
-    }
-
     public StatResponse findQueryCountByJpa(String query, LocalDate date) {
         DailyStatQueryResponse queryResponse = dailyStatQueryService.findQueryCountByJpa(query, date);
         return new StatResponse(queryResponse.query(), queryResponse.count());
     }
 
-    public List<StatResponse> findTop5Query() {
-        List<DailyStatQueryResponse> queryResponse = dailyStatQueryService.findTop5Query();
-        return queryResponse.stream()
-                .map(this::toStatResponse)
-                .toList();
-    }
+
 
     public List<StatResponse> findTop5QueryByJpa() {
         List<DailyStatQueryResponse> queryResponse = dailyStatQueryService.findTop5QueryByJpa();
         return queryResponse.stream()
                 .map(this::toStatResponse)
                 .toList();
-    }
-
-    private PageResult<SearchResponse> convertToPageResult(PageQueryResult<SearchQueryResponse> pageQueryResponse) {
-        List<SearchResponse> searchResponses = pageQueryResponse.contents().stream()
-                .map(this::toSearchResponse)
-                .toList();
-        return new PageResult<>(pageQueryResponse.page(), pageQueryResponse.size(), pageQueryResponse.totalElements(), searchResponses);
-    }
-
-    private SearchResponse toSearchResponse(SearchQueryResponse queryResponse){
-        return new SearchResponse(queryResponse.title(), queryResponse.link(), queryResponse.description());
-    }
-
-    private StatResponse toStatResponse(DailyStatQueryResponse queryResponse){
-        return new StatResponse(queryResponse.query(), queryResponse.count());
     }
 }

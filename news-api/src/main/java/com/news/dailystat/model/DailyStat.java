@@ -21,7 +21,7 @@ public class DailyStat {
 
     public static DailyStat create(String query, LocalDateTime eventDateTime){
         return DailyStat.builder()
-                .query(query)
+                .query(query.toUpperCase())
                 .eventDateTime(eventDateTime)
                 .build();
     }
