@@ -1,11 +1,11 @@
 package com.news.search.service
 
-import com.news.dailystat.model.DailyStat
-import com.news.dailystat.service.DailyStatCommandService
 import com.news.dailystat.service.DailyStatQueryService
 import com.news.dailystat.service.response.DailyStatQueryResponse
+import com.news.search.service.event.SearchEvent
 import com.news.search.service.response.PageQueryResult
 import com.news.search.service.response.SearchQueryResponse
+import org.springframework.context.ApplicationEventPublisher
 import spock.lang.Specification
 
 import java.time.LocalDate
@@ -14,11 +14,11 @@ class WebApplicationServiceTest extends Specification {
     WebApplicationService webApplicationService
 
     WebQueryService webQueryService = Mock(WebQueryService)
-    DailyStatCommandService dailyStatCommandService = Mock(DailyStatCommandService)
     DailyStatQueryService dailyStatQueryService = Mock(DailyStatQueryService)
+    ApplicationEventPublisher eventPublisher = Mock(ApplicationEventPublisher)
 
     void setup() {
-        webApplicationService = new WebApplicationService(webQueryService, dailyStatCommandService, dailyStatQueryService)
+        webApplicationService = new WebApplicationService(webQueryService, dailyStatQueryService, eventPublisher)
     }
 
     def "search메서드 호출시 검색결과를 반환하면서 통계데이터를 저장한다."() {
@@ -43,11 +43,8 @@ class WebApplicationServiceTest extends Specification {
                 assert size == givenSize
                 return mockPageQueryResult
         }
-        and:
-        1 * dailyStatCommandService.save(*_) >> {
-            DailyStat dailyStat ->
-                assert dailyStat.query == givenQuery
-        }
+        and: "저장 이벤트를 발행한다."
+        1 * eventPublisher.publishEvent(_ as SearchEvent)
     }
 
     def "findQueryCount메서드 호출시 인자를 그대로 넘긴다"() {
