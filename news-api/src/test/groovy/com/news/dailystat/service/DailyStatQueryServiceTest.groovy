@@ -38,13 +38,13 @@ class DailyStatQueryServiceTest extends Specification {
         response.count() == expectedCount
     }
 
-    def "findTop5Query 조회시 상위 5개 반환 요청이 들어간다."() {
+    def "findTop15Query 조회시 상위 5개 반환 요청이 들어간다."() {
         when:
-        dailyStatQueryService.findTop5Query()
+        dailyStatQueryService.findTop15Query()
 
         then:
         1 * dailyStatRepository.findTopQuery(*_) >> { int limit ->
-            assert limit == 5
+            assert limit == 15
         }
     }
 }

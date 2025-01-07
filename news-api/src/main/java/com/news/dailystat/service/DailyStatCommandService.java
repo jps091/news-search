@@ -9,6 +9,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Slf4j
 @RequiredArgsConstructor
 @Service
@@ -23,9 +25,16 @@ public class DailyStatCommandService {
         dailyStatJdbcRepository.save(dailyStat);
     }
 
-
-    public void saveByJpa(DailyStat dailyStat) {
+    public void saveAll(List<DailyStat> dailyStat) {
         log.info("save daily stats: {}", dailyStat);
-        dailyStatJpaRepository.save(DailyStatEntity.from(dailyStat));
+        dailyStatJdbcRepository.saveAll(dailyStat);
+    }
+
+    public void saveAllByJpa(List<DailyStat> dailyStat) {
+        log.info("save daily stats: {}", dailyStat);
+        List<DailyStatEntity> dailyStatEntityList = dailyStat.stream()
+                .map(DailyStatEntity::from)
+                .toList();
+        dailyStatJpaRepository.saveAll(dailyStatEntityList);
     }
 }

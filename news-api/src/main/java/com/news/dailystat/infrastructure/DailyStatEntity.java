@@ -16,16 +16,11 @@ public class DailyStatEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "query")
+    @Column(name = "query",length = 200)
     private String query;
 
     @Column(name = "event_date_time")
     private LocalDateTime eventDateTime;
-
-    public DailyStatEntity(String query, LocalDateTime eventDateTime) {
-        this.query = query;
-        this.eventDateTime = eventDateTime;
-    }
 
     public static DailyStatEntity from(DailyStat dailyStat){
         DailyStatEntity dailyStatEntity = new DailyStatEntity();
@@ -33,13 +28,5 @@ public class DailyStatEntity {
         dailyStatEntity.query = dailyStat.getQuery();
         dailyStatEntity.eventDateTime = dailyStat.getEventDateTime();
         return dailyStatEntity;
-    }
-
-    public DailyStat toModel(){
-        return DailyStat.builder()
-                .id(id)
-                .query(query)
-                .eventDateTime(eventDateTime)
-                .build();
     }
 }

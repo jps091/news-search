@@ -1,4 +1,4 @@
-package com.news.dailystat.model;
+package com.news.searchinfo.model;
 
 
 import lombok.AllArgsConstructor;
@@ -13,24 +13,27 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @ToString
-public class DailyStat {
+public class SearchInfo {
 
-    private final Long id;
+    private final int id;
+
+    private final int searchCount;
 
     private final String query;
 
     private final LocalDateTime eventDateTime;
 
-    public static DailyStat create(String query, LocalDateTime eventDateTime){
-        return DailyStat.builder()
+    public static SearchInfo create(String query, LocalDateTime eventDateTime){
+        return SearchInfo.builder()
                 .query(query)
+                .searchCount(1)
                 .eventDateTime(eventDateTime)
                 .build();
     }
 
-    public static List<DailyStat> create(List<String> queryList, LocalDateTime eventDateTime){
+    public static List<SearchInfo> create(List<String> queryList, LocalDateTime eventDateTime){
         return queryList.stream()
-                .map(query -> DailyStat.create(query, eventDateTime))
+                .map(query -> SearchInfo.create(query, eventDateTime))
                 .toList();
     }
 }

@@ -4,12 +4,15 @@ import com.news.dailystat.model.DailyStat;
 import com.news.dailystat.service.response.DailyStatQueryResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Component;
 
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -36,19 +39,24 @@ public class DailyStatJdbcRepository {
     }
 
     public void saveAll(List<DailyStat> dailyStats) {
-        StringBuilder sql = new StringBuilder("INSERT INTO daily_stat (query, event_date_time) VALUES ");
-        List<Object> params = new ArrayList<>();
+        String sql = "INSERT INTO daily_stat (query, event_date_time) VALUES (?, ?)";
 
-        for (DailyStat dailyStat : dailyStats) {
-            sql.append("(?, ?),");
-            params.add(dailyStat.getQuery());
-            params.add(Timestamp.valueOf(dailyStat.getEventDateTime()));
-        }
+        jdbcTemplate.batchUpdate(
+                sql,
+                new BatchPreparedStatementSetter() {
+                    @Override
+                    public void setValues(PreparedStatement ps, int i) throws SQLException {
+                        DailyStat dailyStat = dailyStats.get(i);
+                        ps.setString(1, dailyStat.getQuery());
+                        ps.setTimestamp(2, Timestamp.valueOf(dailyStat.getEventDateTime()));
+                    }
 
-        // 마지막 콤마 제거
-        sql.deleteCharAt(sql.length() - 1);
-
-        jdbcTemplate.update(sql.toString(), params.toArray());
+                    @Override
+                    public int getBatchSize() {
+                        return dailyStats.size();
+                    }
+                }
+        );
     }
 
     public long countByQueryAndEventDateTimeBetween(String query, LocalDateTime start, LocalDateTime end) {

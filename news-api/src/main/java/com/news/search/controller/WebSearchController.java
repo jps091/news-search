@@ -8,12 +8,8 @@ import com.news.search.service.WebApplicationService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -24,22 +20,15 @@ public class WebSearchController {
     private final WebApplicationService webApplicationService;
 
     @GetMapping
+    @ResponseBody
     public PageResult<SearchResponse> search(@Valid SearchRequest request){
         return webApplicationService.search(request.getQuery(), request.getPage(), request.getSize());
     }
 
-    @GetMapping("/stats")
-    public StatResponse findQueryStats(@RequestParam(name = "query") String query,
-                                       @RequestParam(name = "date", required = false)
-                                       LocalDate date) {
-        log.info("[WebSearchController] find stats query={}, date={}", query, date);
-        LocalDate localDate = (date != null) ? date : LocalDate.now();
-        return webApplicationService.findQueryCount(query, localDate);
-    }
-
     @GetMapping("/stats/ranking")
-    public List<StatResponse> findTop5Stats() {
-        log.info("[WebSearchController] find top 5 stats");
-        return webApplicationService.findTop5Query();
+    @ResponseBody
+    public List<StatResponse> findTopStats() {
+        log.info("[WebSearchController] find top stats");
+        return webApplicationService.findTopQuery();
     }
 }
