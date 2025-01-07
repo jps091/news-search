@@ -1,7 +1,5 @@
 package com.news.search.service;
 
-import com.news.search.infrastructure.KakaoWebRepositoryImpl;
-import com.news.search.infrastructure.NaverWebRepositoryImpl;
 import com.news.search.service.port.WebRepository;
 import com.news.search.service.response.PageQueryResult;
 import com.news.search.service.response.SearchQueryResponse;

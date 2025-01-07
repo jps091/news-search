@@ -3,7 +3,6 @@ package com.news.dailystat.service;
 import com.news.dailystat.infrastructure.DailyStatJdbcRepository;
 import com.news.dailystat.infrastructure.DailyStatJpaRepository;
 import com.news.dailystat.service.response.DailyStatQueryResponse;
-import com.news.search.controller.response.StatResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -23,7 +22,7 @@ public class DailyStatQueryService {
     private final DailyStatJpaRepository dailyStatJpaRepository;
 
     private static final int PAGE = 0;
-    private static final int SIZE = 5;
+    private static final int SIZE = 15;
 
     public DailyStatQueryResponse findQueryCount(String query, LocalDate localDate){
         long count = dailyStatJdbcRepository.countByQueryAndEventDateTimeBetween(
@@ -43,7 +42,7 @@ public class DailyStatQueryService {
         return new DailyStatQueryResponse(query, count);
     }
 
-    public List<DailyStatQueryResponse> findTop5Query() {
+    public List<DailyStatQueryResponse> findTop15Query() {
         return dailyStatJdbcRepository.findTopQuery(SIZE);
     }
 

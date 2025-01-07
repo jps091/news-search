@@ -2,18 +2,17 @@ package com.news.search.service;
 
 import com.news.dailystat.service.response.DailyStatQueryResponse;
 import com.news.search.controller.response.StatResponse;
-import com.news.dailystat.service.DailyStatQueryService;
 import com.news.search.controller.response.PageResult;
 import com.news.search.controller.response.SearchResponse;
 import com.news.search.service.event.SearchEvent;
 import com.news.search.service.response.PageQueryResult;
 import com.news.search.service.response.SearchQueryResponse;
+import com.news.searchinfo.infrastructure.SearchInfoJdbcQueryRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -21,8 +20,9 @@ import java.util.List;
 @Slf4j
 @RequiredArgsConstructor
 public class WebApplicationService {
+    public static final int QUERY_SIZE = 15;
     private final WebQueryService webQueryService;
-    private final DailyStatQueryService dailyStatQueryService;
+    private final SearchInfoJdbcQueryRepository searchInfoJdbcQueryRepository;
     private final ApplicationEventPublisher eventPublisher;
 
     public PageResult<SearchResponse> search(String query, int page, int size){
@@ -34,13 +34,8 @@ public class WebApplicationService {
         return convertToPageResult(pageQueryResponse);
     }
 
-    public StatResponse findQueryCount(String query, LocalDate date) {
-        DailyStatQueryResponse queryResponse = dailyStatQueryService.findQueryCount(query, date);
-        return new StatResponse(queryResponse.query(), queryResponse.count());
-    }
-
-    public List<StatResponse> findTop5Query() {
-        List<DailyStatQueryResponse> queryResponse = dailyStatQueryService.findTop5Query();
+    public List<StatResponse> findTopQuery() {
+        List<DailyStatQueryResponse> queryResponse = searchInfoJdbcQueryRepository.findTopQuery(QUERY_SIZE);
         return queryResponse.stream()
                 .map(this::toStatResponse)
                 .toList();
