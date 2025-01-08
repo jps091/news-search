@@ -93,6 +93,7 @@ public class TestService {
                 .toList();
     }
 
+
     public List<StatResponse> totalGroupBy(String query){
         List<String> queryList = parseString(query);
         List<DailyStat> dailyStatList = DailyStat.create(queryList, LocalDateTime.now());
